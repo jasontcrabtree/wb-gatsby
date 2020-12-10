@@ -1,6 +1,7 @@
 import { graphql } from 'gatsby';
 import React from 'react';
 import PizzaList from '../components/PizzaList';
+import ToppingsFilter from '../components/ToppingsFilter';
 
 export const query = graphql`
   query pizzaQuery {
@@ -38,6 +39,7 @@ const PizzasPage = ({ data }) => {
   return (
     <>
       <h1>Pizza. Best served shared with company, with individual pizzas.</h1>
+      <ToppingsFilter />
       <PizzaList pizzas={pizzas} />
     </>
   );

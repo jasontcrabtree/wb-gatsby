@@ -22,7 +22,7 @@ const NavStyles = styled.nav`
   }
 
   li {
-    /* MVP Trick for alternatiting rotating — use a variable */
+    /* MVP Trick for alternating rotating — use a variable */
     --rotate: -2deg;
     transform: rotate(var(--rotate));
     order: 1;
@@ -58,8 +58,8 @@ const NavStyles = styled.nav`
   setTimeout(() => {
     console.log('go slicers');
     // navigate is a gatsby function to control with code. replace: true option adds the navigation to browser history (important)
-    // wes mostly doesn't use this as its for web apps, not websites
-    // also navigate requires you to put a link in a button — which you shouldn't do!!
+    // Wes mostly doesn't use this as its for web apps, not websites
+    // Also navigate requires you to put a link in a button — which you shouldn't do!!
     navigate('/slicemasters', { replace: true });
   }, 2000);
   // 2. change the page
