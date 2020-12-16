@@ -2,8 +2,6 @@ import dotenv from 'dotenv';
 
 dotenv.config({ path: '.env' });
 
-// TODO VIDEO PROGRESS 9:30M on video
-
 export default {
   siteMetadata: {
     title: `Slick's Pizza`,
