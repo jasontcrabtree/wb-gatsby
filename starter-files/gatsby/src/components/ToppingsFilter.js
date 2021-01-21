@@ -21,7 +21,10 @@ const ToppingsStyles = styled.div`
       padding: 2px 5px;
       border-radius: 2px;
     }
-    .active {
+    &.active,
+    &[aria-current='page']
+    /* aria-current=Page works to find the active filter component using gatsby current page api, but DOESN'T work with the link to anchor tag ON THE FILTERED LINKS to skip filters, meaning each page navigation jumps around */
+    /* &[aria-current='page'] */ {
       background: var(--yellow);
     }
   }
@@ -61,7 +64,7 @@ function countPizzasInToppings(pizzas) {
   return sortedToppings;
 }
 
-function ToppingsFilter() {
+function ToppingsFilter({ activeTopping }) {
   // Get a list of all the toppings
   const { toppings, pizzas } = useStaticQuery(graphql`
     query {
@@ -100,12 +103,21 @@ function ToppingsFilter() {
         {toppings.nodes.length} different Toppings!
       </p>
       <ToppingsStyles>
+        <Link to="/pizzas">
+          {console.log(activeTopping)}
+          {console.log(toppings)}
+          <span className="name">All Flavours {toppings.nodes.length}</span>
+        </Link>
         {/* // Loop over the list of toppings and display
         the topping (category) and the count of  pizzas in
         that topping (category) */}
         {toppingsWithCounts.map((topping) => (
           // Link to each topping
-          <Link to={`/topping/${topping.name}`} key={topping.id}>
+          <Link
+            to={`/topping/${topping.name}/#flavours`}
+            key={topping.id}
+            className={topping.name === activeTopping ? 'active' : ''}
+          >
             <span>{topping.name}</span>
             <span className="count">{topping.count}</span>
           </Link>

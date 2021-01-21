@@ -1,5 +1,7 @@
 import { graphql } from 'gatsby';
 import React from 'react';
+import styled from 'styled-components';
+import Img from 'gatsby-image';
 
 // We get the pizza data (from the dynamically created pages) from gatsby node into our template via a context object in our createPage actions
 
@@ -27,18 +29,29 @@ export const query = graphql`
   }
 `;
 
+const PizzaGridStyles = styled.main`
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+`;
+
 function SinglePizzaPage({ data }) {
-  console.log(data);
-  const { toppings } = data.pizza;
+  const { toppings, image } = data.pizza;
+
+  console.log(image);
+
   return (
-    <>
-      <h1>{data.pizza.name}</h1>
-      <ul>
-        {toppings.map((topping, i) => (
-          <li key={(topping._id, i)}>{topping.name}</li>
-        ))}
-      </ul>
-    </>
+    <PizzaGridStyles>
+      <Img fluid={image.asset.fluid} alt={data.pizza.name} />
+      <div>
+        <h1 className="mark">{data.pizza.name}</h1>
+        <ul>
+          {toppings.map((topping, i) => (
+            <li key={(topping._id, i)}>{topping.name}</li>
+          ))}
+        </ul>
+      </div>
+    </PizzaGridStyles>
   );
 }
 

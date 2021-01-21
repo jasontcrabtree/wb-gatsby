@@ -4,8 +4,10 @@ import PizzaList from '../components/PizzaList';
 import ToppingsFilter from '../components/ToppingsFilter';
 
 export const query = graphql`
-  query pizzaQuery {
-    pizzas: allSanityPizza {
+  query pizzaQuery($toppingRegex: String) {
+    pizzas: allSanityPizza(
+      filter: { toppings: { elemMatch: { name: { regex: $toppingRegex } } } }
+    ) {
       nodes {
         name
         price
@@ -33,14 +35,16 @@ export const query = graphql`
   }
 `;
 
-const PizzasPage = ({ data }) => {
+const PizzasPage = ({ data, pageContext }) => {
+  console.log(data);
   const pizzas = data.pizzas.nodes;
 
   return (
     <>
       <h1>Pizza. Best served shared with company, with individual pizzas.</h1>
-      <ToppingsFilter />
-      <PizzaList pizzas={pizzas} />
+      {/* this passes in the ACTIVETOPPING via our gatsby node file — where we have passed the context to the component of the active component, then in the toppings filter component we pass the activeTopping prop in */}
+      <ToppingsFilter activeTopping={pageContext.topping} />
+      <PizzaList pizzas={pizzas} id="flavours" />
     </>
   );
 };
