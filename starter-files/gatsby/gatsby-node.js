@@ -99,6 +99,48 @@ async function fetchBeersandTurnIntoNodes({
   }
 }
 
+async function turnSlicemastersIntoPages({ graphql, actions }) {
+  // 1. Query all slicemasters  const { data } = await graphql(`
+  const { data } = await graphql(`
+    query {
+      slicemasters: allSanityPerson {
+        totalCount
+        nodes {
+          name
+          id
+          slug {
+            current
+          }
+        }
+      }
+    }
+  `);
+
+  // TODO: 2. Turn each slicemaster into their own page
+  // 3. Figure out how many pages their are based on how many slicemasters there are, and how many per page!
+  const pageSize = parseInt(process.env.GATSBY_PAGE_SIZE);
+  const pageCount = Math.ceil(data.slicemasters.totalCount / pageSize);
+  /*   console.log(
+    `There are ${data.slicemasters.totalCount} total people. That means we have ${pageCount} with ${pageSize} per page`
+  ); */
+  // 4. Loop from 1 to n and create the pages for them
+  Array.from({ length: pageCount }).forEach((_, i) => {
+    // console.log(`Creating page ${i}`);
+    actions.createPage({
+      path: `/slicemasters/${i + 1}`,
+      component: path.resolve('./src/pages/slicemasters.js'),
+      // this data is passed to the template when we create it
+      context: {
+        // how many to skip with the pagination
+        // index * pageSize, so it incrementally increases
+        skip: i * pageSize,
+        currentPage: i + 1,
+        pageSize,
+      },
+    });
+  });
+}
+
 export async function sourceNodes(params) {
   // fetch a list of beers and source them into our gatsby API
   // call the above fetchBeer function using a promise (incase multiple similar async data fetching functions)
@@ -109,11 +151,12 @@ export async function createPages(params) {
   // Create pages dynamically with gatsby node
   // 1. and 2. are both promise based functions to create pages, and they SHOULD be run concurrently — they don't need to wait for each other
 
-  // run both page creation functions at the same time using an ARRAY of promises
+  // run both page create functions at the same time using an ARRAY of promises
   // wait for all promises to be resolved before finishing the function (for better build time performance)
   await Promise.all([
     turnPizzaIntoPages(params),
     turnToppingsIntoPages(params),
+    turnSlicemastersIntoPages(params),
   ]);
 
   // 1. Pizzas

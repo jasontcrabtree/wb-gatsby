@@ -2,10 +2,11 @@ import { graphql, Link } from 'gatsby';
 import React from 'react';
 import Img from 'gatsby-image';
 import styled from 'styled-components';
+import Pagination from '../components/Pagination';
 
 export const query = graphql`
-  query {
-    slicemasters: allSanityPerson {
+  query($skip: Int = 0, $pageSize: Int = 2) {
+    slicemasters: allSanityPerson(limit: $pageSize, skip: $skip) {
       totalCount
       nodes {
         name
@@ -56,14 +57,30 @@ const Slicemaster = styled.li`
     position: relative;
     z-index: 2;
   }
+  .description {
+    background: var(--yellow);
+    padding: 1rem;
+    margin: 2rem;
+    margin-top: -6rem;
+    z-index: 2;
+    position: relative;
+    transform: rotate(1deg);
+  }
 `;
 
-function SlicemastersPage({ data }) {
+function SlicemastersPage({ data, pageContext }) {
   const sliceMasters = data.slicemasters.nodes;
-  console.log(sliceMasters);
+  // console.log(sliceMasters);
   return (
     <>
       <h1>Slice selection extravaganza.</h1>
+      <Pagination
+        pageSize={pageContext.pageSize}
+        totalCount={data.slicemasters.totalCount}
+        currentPage={pageContext.currentPage || 1}
+        skip={pageContext.skip}
+        base="/slicemasters"
+      />
       <SlicemasterGrid>
         {sliceMasters.map((person, i) => (
           <Slicemaster key={i}>
