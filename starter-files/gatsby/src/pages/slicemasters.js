@@ -3,6 +3,7 @@ import React from 'react';
 import Img from 'gatsby-image';
 import styled from 'styled-components';
 import Pagination from '../components/Pagination';
+import SEO from '../components/SEO';
 
 export const query = graphql`
   query($skip: Int = 0, $pageSize: Int = 2) {
@@ -73,9 +74,10 @@ function SlicemastersPage({ data, pageContext }) {
   // console.log(sliceMasters);
   return (
     <>
+      <SEO title={`Slicemasters - Page ${pageContext.currentPage || 1}`} />
       <h1>Slice selection extravaganza.</h1>
       <Pagination
-        pageSize={pageContext.pageSize}
+        pageSize={parseInt(process.env.GATSBY_PAGE_SIZE)}
         totalCount={data.slicemasters.totalCount}
         currentPage={pageContext.currentPage || 1}
         skip={pageContext.skip}
